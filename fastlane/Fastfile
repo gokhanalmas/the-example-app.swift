@@ -23,10 +23,20 @@ platform :ios do
 #     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
 #   end
 
-  desc "Runs all the tests"
-  lane :test do
-    scan(scheme: "the-example-app.swift")
+  desc "Description of what the lane does"
+  lane :CI do
+      run_tests(project: "the-example-app.swift.xcodeproj",
+      devices: ["iPhone 6s"],
+      scheme: "the-example-app.swift")
   end
+ 
+  lane :CD do |values|
+    gym(scheme: 'the-example-app.swift', project: "the-example-app.swift.xcodeproj", clean: true, silent: true, include_bitcode: false, export_method: 'ad-hoc')
+   end
+#   desc "Runs all the tests"
+#   lane :test do
+#     scan(scheme: "the-example-app.swift")
+#   end
 
 #   desc "Submit a new Beta Build to Apple TestFlight"
 #   desc "This will also make sure the profile is up to date"
@@ -50,20 +60,20 @@ platform :ios do
 
   # You can define as many lanes as you want
 
-  after_all do |lane|
-    # This block is called, only if the executed lane was successful
+#   after_all do |lane|
+#     # This block is called, only if the executed lane was successful
 
-    # slack(
-    #   message: "Successfully deployed new App Update."
-    # )
-  end
+#     # slack(
+#     #   message: "Successfully deployed new App Update."
+#     # )
+#   end
 
-  error do |lane, exception|
-    # slack(
-    #   message: exception.message,
-    #   success: false
-    # )
-  end
+#   error do |lane, exception|
+#     # slack(
+#     #   message: exception.message,
+#     #   success: false
+#     # )
+#   end
 end
 
 
